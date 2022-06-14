@@ -11,6 +11,7 @@ public enum PlayerTeam
 
 public class GameManager : MonoBehaviour
 {
+    Minimax minimax;
     BoardManager board;
     public PlayerTeam playerTurn;
     bool kingDead = false;
