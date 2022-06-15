@@ -10,6 +10,8 @@ public class Minimax : MonoBehaviour
     int myScore = 0;
     int opponentScore = 0;
     int maxDepth;
+    //int alpha;
+    //int beta;
 
     List<TileData> myPieces = new List<TileData>();
     List<TileData> opponentPieces = new List<TileData>();
@@ -59,6 +61,9 @@ public class Minimax : MonoBehaviour
     }
 
 
+
+
+
         List<MoveData> GetMoves(PlayerTeam team)
     {
         List<MoveData> turnMove = new List<MoveData>();
@@ -75,8 +80,13 @@ public class Minimax : MonoBehaviour
                 turnMove.Add(newMove);
             }
         }
+
         return turnMove;
     }
+
+
+
+
 
 
         void DoFakeMove(TileData currentTile, TileData targetTile)
@@ -84,6 +94,12 @@ public class Minimax : MonoBehaviour
         targetTile.SwapFakePieces(currentTile.CurrentPiece);
         currentTile.CurrentPiece = null;
     }
+
+
+
+
+
+
 
 
         void UndoFakeMove()
@@ -99,6 +115,12 @@ public class Minimax : MonoBehaviour
     }
 
 
+
+
+
+
+
+
         int Evaluate()
     {
         int pieceDifference = myScore - opponentScore;            
@@ -106,11 +128,15 @@ public class Minimax : MonoBehaviour
     }
 
 
+
+
+
+
+
         void GetBoardState()
     {
         myPieces.Clear();
-        opponentPieces.Clear();
-        myScore = 0;
+        opponentPieces.Clear(); 
         opponentScore = 0;
 
         for (int y = 0; y < 8; y++)        
@@ -135,6 +161,9 @@ public class Minimax : MonoBehaviour
 
 
 
+
+
+
         public MoveData GetMove()
         {
             board = BoardManager.Instance;
@@ -146,6 +175,14 @@ public class Minimax : MonoBehaviour
 
             return bestMove;
         } 
+
+
+
+
+
+
+
+
 
 
         //original
@@ -179,14 +216,20 @@ public class Minimax : MonoBehaviour
                         if (score > bestMove.score && depth == maxDepth)                                                                
                             bestMove = move;                                                            
                     }
-                    
+                   //does this one go with the alpha? not quite sure where to put it? is this even a loop idk
+                   if (score <= alpha)                
+                   break; 
+                   if (score >= beta)                
+                   break;
                 }
                 //return maxScore;
                 return alpha;
+
             }
             else
             {
                 PlayerTeam opponent = gameManager.playerTurn == PlayerTeam.WHITE ? PlayerTeam.BLACK : PlayerTeam.WHITE;
+                //removed this 
                 //int minScore = int.MaxValue;
                 List<MoveData> allMoves = GetMoves(opponent);
                 allMoves = Shuffle(allMoves);
@@ -203,11 +246,25 @@ public class Minimax : MonoBehaviour
                     if (score < beta)                
                     beta = score;   
 
+                    //does this fit with the beta and the alpha fits with the alpha
+                    if (score <= alpha)                
+                    break;
+                    if (score >= beta)                
+                    break;
                 }
                 //return minScore;
                 return beta;
             }
+
         }
+
+
+
+
+
+
+
+
 
 
         public List<T> Shuffle<T>(List<T> list)  
@@ -225,3 +282,4 @@ public class Minimax : MonoBehaviour
 
 }
  
+//can't figure out "there is no argument given that corresponds to the required formal parameter 'beta' of 'Minimax.CalculateMinMax(int, int, int, bool)'
